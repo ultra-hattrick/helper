@@ -1,4 +1,4 @@
-package helperHTConstants
+package utilsConstants
 
 const (
 	MATCH_STATUS_UPCOMING = "UPCOMING"

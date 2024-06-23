@@ -1,4 +1,4 @@
-package helperHTModel
+package utilsModel
 
 import (
 	"database/sql/driver"
