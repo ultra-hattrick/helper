@@ -1,4 +1,4 @@
-module github.com/ultra-hattrick/helper-hattrick
+module github.com/ultra-hattrick/helper
 
 go 1.22.1
 
