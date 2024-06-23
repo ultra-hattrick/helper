@@ -1,0 +1,6 @@
+package helperHTConstants
+
+const (
+	MATCH_STATUS_UPCOMING = "UPCOMING"
+	MATCH_STATUS_FINISHED = "FINISHED"
+)
