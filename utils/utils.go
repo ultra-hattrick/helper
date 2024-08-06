@@ -1,18 +1,12 @@
 package utils
 
 import (
-	"bytes"
-	"encoding/xml"
 	"fmt"
-	"io"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/dghubble/oauth1"
 	"github.com/gin-gonic/gin"
-	"gitlab.com/uchile1/helper/helperCommon"
 	"gitlab.com/uchile1/helper/helperLog"
 )
 
@@ -74,43 +68,6 @@ func GetQueryInt(c *gin.Context, key string, defaultValue int, validator func(in
 		return 0, fmt.Errorf("invalid value for %s parameter: %d", key, intValue)
 	}
 	return intValue, nil
-}
-
-func GetResultsFromHattrick(pathHattrick string, v any) error {
-	config := oauth1.NewConfig(os.Getenv("CONSUMER_KEY"), os.Getenv("CONSUMER_SECRET"))
-	httpClient := config.Client(oauth1.NoContext, oauth1.NewToken(os.Getenv("OAUTH1_TOKEN"), os.Getenv("OAUTH1_TOKEN_SECRET")))
-	path := fmt.Sprintf("%s%s", os.Getenv("BASE_RESOURCE_URL"), pathHattrick)
-	resp, err := httpClient.Get(path)
-	helperLog.Logger.Warn().Str(
-		"function", helperCommon.GetFrame(2).Function,
-	).Msgf("Se ocupa API Hattrick url: %s", path)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	// Imprimir el status code
-	helperLog.Logger.Debug().Msgf("HTTP Status Code: %d para la url: %s", resp.StatusCode, path)
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("HTTP Status Code: %d para la url: %s", resp.StatusCode, path)
-	}
-
-	// Leer el contenido del body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-	helperLog.Logger.Debug().Msgf("Response Body: %s", string(body))
-
-	// Reiniciar el cuerpo de la respuesta para que pueda ser decodificado
-	resp.Body = io.NopCloser(bytes.NewBuffer(body))
-
-	err = xml.NewDecoder(resp.Body).Decode(v)
-	if err != nil {
-		return err
-	}
-	// helperLog.Logger.Debug().Msgf("--->Arena: %v", hattrickData.Match.DetailsMatch.Arena)
-	return nil
 }
 
 // GetLastDayAndPlusDays returns two dates:
