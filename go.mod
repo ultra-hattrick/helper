@@ -5,9 +5,12 @@ go 1.22.1
 require (
 	github.com/dghubble/oauth1 v0.7.3
 	github.com/gin-gonic/gin v1.10.0
+	gorm.io/gorm v1.25.10
 )
 
 require (
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/rs/zerolog v1.33.0 // indirect
 )
