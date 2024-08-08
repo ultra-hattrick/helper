@@ -17,11 +17,11 @@ import (
 )
 
 type UserRegister struct {
-	id             uint
-	role           *string
-	accessToken    *string
-	accessSecret   *string
-	isAccessFinish bool
+	ID             uint
+	Role           *string
+	AccessToken    *string
+	AccessSecret   *string
+	IsAccessFinish bool
 }
 
 type HattrickCHPP struct {
@@ -39,8 +39,8 @@ func (h *HattrickCHPP) getClientByTokens(isPermitedTokenAdmin bool) (*http.Clien
 	var userRegister *UserRegister
 	if h.userRegisterID != nil {
 		err := h.db.
-			Where("id = ? AND is_access_finish = ? AND role in (?)",
-				h.userRegisterID, true, []string{utilsConstants.ROLE_ADMIN, utilsConstants.ROLE_USER_TRIAL, utilsConstants.ROLE_USER_PREMIUM}).
+			Where(&UserRegister{ID: *h.userRegisterID, IsAccessFinish: true}).
+			Where("role in (?)", []string{utilsConstants.ROLE_ADMIN, utilsConstants.ROLE_USER_TRIAL, utilsConstants.ROLE_USER_PREMIUM}).
 			First(&userRegister).Error
 		if err != nil {
 			return nil, err
@@ -50,16 +50,16 @@ func (h *HattrickCHPP) getClientByTokens(isPermitedTokenAdmin bool) (*http.Clien
 			return nil, fmt.Errorf("resource protected, not found userRegister to get admin token")
 		}
 		role := utilsConstants.ROLE_ADMIN
-		err := h.db.Where(&UserRegister{role: &role}).First(&userRegister).Error
+		err := h.db.Where(&UserRegister{Role: &role}).First(&userRegister).Error
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if userRegister.accessToken == nil || userRegister.accessSecret == nil {
+	if userRegister.AccessToken == nil || userRegister.AccessSecret == nil {
 		return nil, fmt.Errorf("tokens access not found or inactive for userRegisterID: %d to invoke APIs CHPP of Hattrick", h.userRegisterID)
 	}
-	client := config.Client(oauth1.NoContext, oauth1.NewToken(*userRegister.accessToken, *userRegister.accessSecret))
+	client := config.Client(oauth1.NoContext, oauth1.NewToken(*userRegister.AccessToken, *userRegister.AccessSecret))
 	return client, nil
 }
 
