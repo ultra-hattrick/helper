@@ -39,8 +39,8 @@ func (h *HattrickCHPP) getClientByTokens(isPermitedTokenAdmin bool) (*http.Clien
 	var userRegister *UserRegister
 	if h.userRegisterID != nil {
 		err := h.db.
-			Where(&UserRegister{id: *h.userRegisterID, isAccessFinish: true}).
-			Where("roles in (?)", []string{utilsConstants.ROLE_ADMIN, utilsConstants.ROLE_USER_TRIAL, utilsConstants.ROLE_USER_PREMIUM}).
+			Where("id = ? AND is_access_finish = ? AND role in (?)",
+				h.userRegisterID, true, []string{utilsConstants.ROLE_ADMIN, utilsConstants.ROLE_USER_TRIAL, utilsConstants.ROLE_USER_PREMIUM}).
 			First(&userRegister).Error
 		if err != nil {
 			return nil, err
