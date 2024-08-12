@@ -78,17 +78,17 @@ func (h *HattrickCHPP) GetResultsFromHattrick(pathHattrick string, v any) error 
 	}
 	defer resp.Body.Close()
 
-	// Imprimir el status code
-	helperLog.Logger.Debug().Msgf("HTTP Status Code: %d para la url: %s", resp.StatusCode, path)
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("HTTP Status Code: %d para la url: %s", resp.StatusCode, path)
-	}
-
 	// Leer el contenido del body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
+	// Imprimir el status code
+	helperLog.Logger.Debug().Msgf("HTTP Status Code: %d para la url: %s", resp.StatusCode, path)
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("HTTP Status Code: %d para la url: %s --> respuesta XML desde HT: %s", resp.StatusCode, path, string(body))
+	}
+
 	helperLog.Logger.Debug().Msgf("Response Body: %s", string(body))
 
 	// Reiniciar el cuerpo de la respuesta para que pueda ser decodificado
